@@ -11,6 +11,7 @@ import SwiftUI
         named(BindingCases),
         named(Cases),
         named(binding),
+        named(`default`(for:)),
         named(choice)
 )
 @attached(extension, conformances: OneOf)

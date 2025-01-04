@@ -30,7 +30,7 @@ public struct OneOfControl<S: OneOf>: CatalogControl {
                 .padding()
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(.secondary, lineWidth: 1)
+                        .stroke(.tertiary, lineWidth: 1)
                 }
             }
         }

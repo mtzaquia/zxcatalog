@@ -76,6 +76,8 @@ extension OneOfMacro: MemberMacro {
             }
         }
 
+        let hasAssociatedValues = enumCases.contains { !$0.params.isEmpty }
+
         let plainCases = enumCases.cases(renderingMode: .justCase)
         let bindingCases = enumCases.cases(renderingMode: .caseWithAssociatedValues)
         let patternMatchedCases = zip(
@@ -118,12 +120,21 @@ extension OneOfMacro: MemberMacro {
             }
             """
 
+        let defaultValueSyntax: DeclSyntax =
+            """
+            \(access)static func `default`(for choice: Cases) -> Self {
+                switch choice {
+                \(raw: enumCases.map { "case .\($0.name): .\($0.name)" }.joined(separator: "\n"))
+                }
+            }
+            """
+
         return [
             bindingCasesEnumSyntax,
             bindingVariableSyntax,
             casesEnumSyntax,
             choiceVariableSyntax
-        ]
+        ] + (!hasAssociatedValues ? [defaultValueSyntax] : [])
     }
 }
 
