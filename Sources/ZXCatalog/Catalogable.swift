@@ -11,6 +11,7 @@ import SwiftUI
 public protocol Catalogable: View {
     associatedtype Sample: View
 
+    @ViewBuilder @MainActor
     var sample: Sample { get }
 
     var controls: [any CatalogControl] { get }
