@@ -1,4 +1,4 @@
-# zxcatalog
+# ZXCatalog
 
 This package provides a basic scaffolding for Design System catalogs. It enables visualisation and property manipulation of live components, akin to [Storybook](https://storybook.js.org/).
 
