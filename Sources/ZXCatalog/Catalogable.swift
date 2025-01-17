@@ -8,10 +8,11 @@ import SwiftUI
 /// Declares a component capable of being displayed in catalog.
 ///
 /// - Important: Do not override the default `body` implementation - it is provided automatically.
+@MainActor
 public protocol Catalogable: View {
     associatedtype Sample: View
 
-    @ViewBuilder @MainActor
+    @ViewBuilder
     var sample: Sample { get }
 
     var controls: [any CatalogControl] { get }
