@@ -9,13 +9,14 @@ import SwiftUI
 public struct OneOfControl<S: OneOf>: CatalogControl {
     public let title: String
     @Binding var selection: S
+    let ignoredCases: [S.Cases]
 
     let content: (S.BindingCases) -> [any CatalogControl]
 
     public var body: some View {
         VStack {
             Picker(title, selection: $selection.choice) {
-                ForEach(Array(S.allCases), id: \.self) { value in
+                ForEach(casesToPick, id: \.self) { value in
                     Text("\(value)").tag(value)
                 }
             }
@@ -36,15 +37,28 @@ public struct OneOfControl<S: OneOf>: CatalogControl {
         }
     }
 
-    public init(title: String, selection: Binding<S>, content: @escaping (S.BindingCases) -> [any CatalogControl]) {
+    public init(
+        title: String,
+        selection: Binding<S>,
+        ignoring ignoredCases: [S.Cases] = [],
+        content: @escaping (
+            S.BindingCases
+        ) -> [any CatalogControl]
+    ) {
         self.title = title
         self._selection = selection
+        self.ignoredCases = ignoredCases
         self.content = content
     }
 
-    public init(title: String, selection: Binding<S>) {
+    public init(title: String, selection: Binding<S>, ignoring ignoredCases: [S.Cases] = []) {
         self.title = title
         self._selection = selection
+        self.ignoredCases = ignoredCases
         self.content = { _ in [] }
+    }
+
+    var casesToPick: [S.Cases] {
+        S.allCases.filter { !ignoredCases.contains($0) }
     }
 }
