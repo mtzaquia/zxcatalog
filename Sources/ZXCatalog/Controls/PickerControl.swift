@@ -6,9 +6,10 @@
 import SFSafeSymbols
 import SwiftUI
 
-public struct PickerControl<S: Hashable & CustomStringConvertible & Identifiable>: CatalogControl {
+public struct PickerControl<S: Hashable>: CatalogControl {
     public let title: String
     public let options: [S]
+    let displayName: ((S) -> String?)?
 
     @Binding var selection: S
 
@@ -19,12 +20,21 @@ public struct PickerControl<S: Hashable & CustomStringConvertible & Identifiable
         Button {
             isPresenting = true
         } label: {
-            LabeledContent(title, value: selection.description)
+            LabeledContent(
+                title,
+                value: {
+                    if let custom = displayName?(selection) {
+                        return custom
+                    } else {
+                        return String(describing: selection)
+                    }
+                }()
+            )
                 .contentShape(Rectangle())
         }
         .sheet(isPresented: $isPresenting) {
             NavigationStack {
-                List(options) { option in
+                List(options, id: \.self) { option in
                     Button {
                         selection = option
                         isPresenting = false
@@ -33,7 +43,7 @@ public struct PickerControl<S: Hashable & CustomStringConvertible & Identifiable
                             if let customView = rowBuilder(option) {
                                 customView
                             } else {
-                                Text(option.description)
+                                Text("\(option)")
                                     .foregroundStyle(.primary)
                             }
 
@@ -63,20 +73,22 @@ public struct PickerControl<S: Hashable & CustomStringConvertible & Identifiable
     public init<R: View>(
         _ title: String,
         selection: Binding<S>,
+        displayName: ((S) -> String?)? = nil,
         options: [S],
         @ViewBuilder rowBuilder: @escaping (S) -> R
     ) {
         self.title = title
         self._selection = selection
+        self.displayName = displayName
         self.options = options
         self.rowBuilder = { AnyView(rowBuilder($0)) }
     }
 
-    public init(_ title: String, selection: Binding<S>, options: [S]) {
+    public init(_ title: String, selection: Binding<S>, displayName: ((S) -> String?)? = nil, options: [S]) {
         self.title = title
         self._selection = selection
+        self.displayName = displayName
         self.options = options
         self.rowBuilder = { _ in nil }
     }
 }
-

@@ -3,7 +3,6 @@
 //  Created by Mauricio Zaquia on 02/01/2025.
 //
 
-import ZXFoundations
 import SwiftUI
 
 public struct OneOfControl<S: OneOf>: CatalogControl {
@@ -14,25 +13,18 @@ public struct OneOfControl<S: OneOf>: CatalogControl {
     let content: (S.BindingCases) -> [any CatalogControl]
 
     public var body: some View {
-        VStack {
-            Picker(title, selection: $selection.choice) {
-                ForEach(casesToPick, id: \.self) { value in
-                    Text("\(value)").tag(value)
-                }
+        Picker(title, selection: $selection.choice) {
+            ForEach(casesToPick, id: \.self) { value in
+                Text("\(value)").tag(value)
             }
+        }
 
-            let nestedControls = content(S.binding(mutating: $selection))
-            if !nestedControls.isEmpty {
-                VStack {
-                    ForEach(nestedControls, id: \.title) { control in
-                        AnyView(control)
-                    }
-                }
-                .padding()
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.tertiary, lineWidth: 1)
-                }
+        let nestedControls = content(S.binding(mutating: $selection))
+        if !nestedControls.isEmpty {
+            ForEach(nestedControls, id: \.title) { control in
+                AnyView(control)
+                    .listRowInsets(EdgeInsets(top: 12, leading: 32, bottom: 12, trailing: 16))
+                    .listRowSeparator(.hidden)
             }
         }
     }
