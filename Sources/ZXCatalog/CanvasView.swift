@@ -20,7 +20,7 @@ struct CanvasView<C: Catalogable>: View {
     
     var body: some View {
         ZStack {
-            Image("canvas")
+            Image("canvas", bundle: .module)
                 .resizable(resizingMode: .tile)
                 .ignoresSafeArea()
             
