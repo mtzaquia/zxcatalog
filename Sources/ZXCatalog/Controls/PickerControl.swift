@@ -13,6 +13,7 @@ public struct PickerControl<S: Hashable>: CatalogControl {
 
     @Binding var selection: S
 
+    @State private var searchTerm: String = ""
     @State private var isPresenting: Bool = false
     let rowBuilder: (S) -> AnyView?
 
@@ -34,7 +35,7 @@ public struct PickerControl<S: Hashable>: CatalogControl {
         }
         .sheet(isPresented: $isPresenting) {
             NavigationStack {
-                List(options, id: \.self) { option in
+                List(currentOptions, id: \.self) { option in
                     Button {
                         selection = option
                         isPresenting = false
@@ -55,6 +56,11 @@ public struct PickerControl<S: Hashable>: CatalogControl {
                         }
                     }
                 }
+                .searchable(
+                    text: $searchTerm,
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: "Search by name"
+                )
                 .navigationTitle(title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -90,5 +96,21 @@ public struct PickerControl<S: Hashable>: CatalogControl {
         self.displayName = displayName
         self.options = options
         self.rowBuilder = { _ in nil }
+    }
+}
+
+extension PickerControl {
+    var currentOptions: [S] {
+        if searchTerm.isEmpty {
+            options
+        } else {
+            options.filter {
+                let displayName = displayName?($0) ?? ""
+                let description = String(describing: $0)
+
+                return displayName.localizedCaseInsensitiveContains(searchTerm) ||
+                    description.localizedCaseInsensitiveContains(searchTerm)
+            }
+        }
     }
 }
