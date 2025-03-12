@@ -23,7 +23,8 @@ struct CanvasView<C: Catalogable>: View {
             Image("canvas", bundle: .module)
                 .resizable(resizingMode: .tile)
                 .ignoresSafeArea()
-            
+                .accessibilityHidden(true)
+
             GeometryReader { proxy in
                 ScrollView {
                     catalogable.sample
@@ -31,6 +32,7 @@ struct CanvasView<C: Catalogable>: View {
                         .frame(minHeight: proxy.size.height)
                         .fixedSize(horizontal: options.usesFixedWidth, vertical: false)
                         .frame(maxWidth: proxy.size.width)
+                        .accessibilitySortPriority(1)
                 }
                 .frame(maxWidth: proxy.size.width)
             }
