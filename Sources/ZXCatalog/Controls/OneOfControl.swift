@@ -15,7 +15,7 @@ public struct OneOfControl<S: OneOf>: CatalogControl {
     public var body: some View {
         Picker(title, selection: $selection.choice) {
             ForEach(casesToPick, id: \.self) { value in
-                Text("\(value)").tag(value)
+                Text(S.name(for: value)).tag(value)
             }
         }
 

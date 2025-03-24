@@ -15,6 +15,7 @@ let package = Package(
         .package(url: "https://github.com/realm/SwiftLint", from: "0.57.1"),
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "5.3.0"),
 
+        .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", from: "1.2.0"),
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-macro-testing.git", exact: "0.5.2"),
     ],
@@ -23,7 +24,8 @@ let package = Package(
             name: "ZXCatalog",
             dependencies: [
                 "ZXCatalogMacros",
-                .product(name: "SFSafeSymbols", package: "SFSafeSymbols")
+                .product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
+                .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
             ],
             resources: [.process("Resources")],
             swiftSettings: [

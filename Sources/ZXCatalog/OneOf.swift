@@ -25,6 +25,9 @@ public protocol OneOf {
     /// - Parameter choice: The currently selected choise.
     static func `default`(for choice: Cases) -> Self
 
+    /// Return all possible cases of this type.
+    static var allCases: [Cases] { get }
+
     /// Returns a UI-friendly name for a given choice.
     /// - Parameter choice: The currently selected choise.
     static func name(for choice: Cases) -> String
